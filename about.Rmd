@@ -13,17 +13,38 @@ library(janitor)
 ```
 
 ```{r cleanData, include = FALSE}
-acs2009 <- read_csv("raw-data/ACS2009.csv")
-acs2010 <- read_csv("raw-data/ACS2010.csv")
-acs2011 <- read_csv("raw-data/ACS2011.csv")
-acs2012 <- read_csv("raw-data/ACS2012.csv")
-acs2013 <- read_csv("raw-data/ACS2013.csv")
-acs2014 <- read_csv("raw-data/ACS2014.csv")
-acs2015 <- read_csv("raw-data/ACS2015.csv")
-acs2016 <- read_csv("raw-data/ACS2016.csv")
-acs2017 <- read_csv("raw-data/ACS2017.csv")
-acs2018 <- read_csv("raw-data/ACS2018.csv")
-nces <- read_csv("raw-data/NCES.csv")
+acs2009 <- read_csv("raw-data/ACS2009.csv") %>% 
+  clean_names() 
+
+acs2010 <- read_csv("raw-data/ACS2010.csv") %>% 
+  clean_names()
+
+acs2011 <- read_csv("raw-data/ACS2011.csv") %>% 
+  clean_names()
+
+acs2012 <- read_csv("raw-data/ACS2012.csv") %>% 
+  clean_names()
+
+acs2013 <- read_csv("raw-data/ACS2013.csv") %>% 
+  clean_names()
+
+acs2014 <- read_csv("raw-data/ACS2014.csv") %>% 
+  clean_names()
+
+acs2015 <- read_csv("raw-data/ACS2015.csv") %>% 
+  clean_names()
+
+acs2016 <- read_csv("raw-data/ACS2016.csv") %>% 
+  clean_names()
+
+acs2017 <- read_csv("raw-data/ACS2017.csv") %>% 
+  clean_names()
+
+acs2018 <- read_csv("raw-data/ACS2018.csv") %>% 
+  clean_names()
+
+nces <- read_csv("raw-data/NCES.csv") %>% 
+  clean_names()
 ```
 
 
@@ -36,7 +57,7 @@ The goal of this project is to discover the extent to which a school’s inequal
 I gathered my data from two sources: the American Community Surveys (ACS) from the US Census Bureau and the National Center for Education Statistics (NCES). From ACS’ data, I extracted information about each school district’s distribution of race and gender, unemployment rate by race and gender, average household income by race, and school dropout rate by sex. From NCES, I was able to find the data on school enrollments by race and sex.
 
 
-Currently, I have gathered most of my data and converted them into csv files. I have not yet processed my data because I am still trying to find a way to organize the NCES data by school districts as opposed to agencies or states. I am also in the process of combining the ACS files into one comprehensive spreadsheet from 2009-2018 because, right now, each spreadsheet represents a different year.
+Currently, I have gathered most of my data and converted them into csv files. I have not yet finished processing my data because I am still trying to find a way to either organize the NCES data by school districts as opposed to agencies or states or find completely new data that is already grouped by school districts. I am also in the process of combining the ACS files into one comprehensive spreadsheet from 2009-2018 because, right now, each spreadsheet represents a different year.
 
 
 Url to my repo: https://github.com/katherinewang122/Final-Project-Milestone-3.git
