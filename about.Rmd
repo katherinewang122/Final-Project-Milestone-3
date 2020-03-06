@@ -13,38 +13,74 @@ library(janitor)
 ```
 
 ```{r cleanData, include = FALSE}
+
+# For each data set, I cleaned its variables' names and added a new column,
+# year, in order to facilitate organizing the joined data sets later on.
+
 acs2009 <- read_csv("raw-data/ACS2009.csv") %>% 
-  clean_names() 
+  clean_names() %>% 
+  mutate(year = "2009")
 
 acs2010 <- read_csv("raw-data/ACS2010.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2010")
 
 acs2011 <- read_csv("raw-data/ACS2011.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2011")
 
 acs2012 <- read_csv("raw-data/ACS2012.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2012")
 
 acs2013 <- read_csv("raw-data/ACS2013.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2013")
 
 acs2014 <- read_csv("raw-data/ACS2014.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2014")
 
 acs2015 <- read_csv("raw-data/ACS2015.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2015")
 
 acs2016 <- read_csv("raw-data/ACS2016.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2016")
 
 acs2017 <- read_csv("raw-data/ACS2017.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2017")
 
 acs2018 <- read_csv("raw-data/ACS2018.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  mutate(year = "2018")
+
+# Since this is not part of the ACS data sets, I did not have to add a year
+# column to it.
 
 nces <- read_csv("raw-data/NCES.csv") %>% 
   clean_names()
+
+# In order to join all the ACS data sets to each other, I used str_detect to
+# find their common term, "ACS," in the data sets. The for loop to allows me to
+# join each data set at a time because merge.data.frame only works with joining
+# two data frames to each other. I joined them by their common variable,
+# Geo_GEOID.
+
+test <- list.files('raw-data', full.names = T)
+test <- test[str_detect(test, 'ACS')]
+
+storage <- read_csv(test[1])
+for(i in 2:length(test)){
+  storage <- merge.data.frame(storage, read_csv(test[i]), by = "Geo_GEOID")
+}
+
+aaa <- read_csv(test[1])
+bbb <- read_csv(test[2])
+
+aaa <- aaa[, colMeans(is.na(aaa)) < 1]
 ```
 
 
