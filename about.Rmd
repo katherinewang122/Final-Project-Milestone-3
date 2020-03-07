@@ -106,7 +106,39 @@ I gathered my data from two sources: the American Community Surveys (ACS) from t
 
 Currently, I have just combined the ACS files into one comprehensive spreadsheet from 2009-2018 and selected the variables that I want. My next step is to find a way to combine the results of the NCES spreadsheet with the ACS spreadsheets since NCES is organized by agencies whereas ACS is organized by school districts. If this doesn't work out, I might either enlarge my focus to the state level (as opposed to the school district level) or focus on one state's school districts.
 
+Since the ACS data uses coded variable names, here are the codes for the variables that I've selected:
+
+se_a02001_001: total population
+se_a02001_002: male
+se_a02001_003: female
+
+se_a03001_001: total population
+se_a03001_002: white alone 
+se_a03001_003: black alone
+
+se_a12003a_001: male civilian population, yrs 16-19
+se_a12003a_002: dropped out, males
+se_a12003a_003: in school, males
+
+se_a12003b_001: female civilian population, yrs 16-19
+se_a12003b_002: dropped out, females
+se_a12003b_003: in school, females
+
+se_a17005a_001: civilian male in labor force, 16+ years
+se_a17005a_002: employed
+se_a17005a_003: unemployed
+
+se_a17005b_001: civilian female in labor force, 16+ years
+se_a17005b_002: employed
+se_a17005b_003: unemployed
+
+se_a17006a_001: whites 16+ years in labor force
+se_a17006a_002: employed
+se_a17006a_003: unemployed
+
+se_a17006b_001: blacks 16+ years in labor force
+se_a17006b_002: employed
+se_a17006b_003: unemployed
 
 
-
-Url to my repo: ___
+Url to my repo: https://github.com/katherinewang122/Final-Project-Milestone-3.git
