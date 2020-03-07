@@ -15,47 +15,60 @@ library(janitor)
 ```{r cleanData, include = FALSE}
 
 # For each data set, I cleaned its variables' names and added a new column,
-# year, in order to facilitate organizing the joined data sets later on.
+# year, in order to facilitate organizing the joined data sets later on. I also
+# selected the variables I wanted, under the name "datapoints."
+
+datapoints <- c("geo_geoid", "geo_name", "se_a02001_001", "se_a02001_002", "se_a02001_003", "se_a03001_001", "se_a03001_002", "se_a03001_003", "se_a12003a_001", "se_a12003a_002", "se_a12003a_003", "se_a12003b_001", "se_a12003b_002", "se_a12003b_003", "se_a17005a_001", "se_a17005a_002", "se_a17005a_003", "se_a17005b_001", "se_a17005b_002", "se_a17005b_003", "se_a17006a_001", "se_a17006a_002", "se_a17006a_003", "se_a17006b_001", "se_a17006b_002", "se_a17006b_003")
 
 acs2009 <- read_csv("raw-data/ACS2009.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2009")
+  mutate(year = "2009") %>% 
+  select(datapoints)
 
 acs2010 <- read_csv("raw-data/ACS2010.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2010")
+  mutate(year = "2010") %>% 
+  select(datapoints)
 
 acs2011 <- read_csv("raw-data/ACS2011.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2011")
+  mutate(year = "2011") %>% 
+  select(datapoints)
 
 acs2012 <- read_csv("raw-data/ACS2012.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2012")
+  mutate(year = "2012") %>% 
+  select(datapoints)
 
 acs2013 <- read_csv("raw-data/ACS2013.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2013")
+  mutate(year = "2013") %>% 
+  select(datapoints)
 
 acs2014 <- read_csv("raw-data/ACS2014.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2014")
+  mutate(year = "2014") %>% 
+  select(datapoints)
 
 acs2015 <- read_csv("raw-data/ACS2015.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2015")
+  mutate(year = "2015") %>% 
+  select(datapoints)
 
 acs2016 <- read_csv("raw-data/ACS2016.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2016")
+  mutate(year = "2016") %>% 
+  select(datapoints)
 
 acs2017 <- read_csv("raw-data/ACS2017.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2017")
+  mutate(year = "2017") %>% 
+  select(datapoints)
 
 acs2018 <- read_csv("raw-data/ACS2018.csv") %>% 
   clean_names() %>% 
-  mutate(year = "2018")
+  mutate(year = "2018") %>% 
+  select(datapoints)
 
 # Since this is not part of the ACS data sets, I did not have to add a year
 # column to it.
@@ -63,24 +76,22 @@ acs2018 <- read_csv("raw-data/ACS2018.csv") %>%
 nces <- read_csv("raw-data/NCES.csv") %>% 
   clean_names()
 
-# In order to join all the ACS data sets to each other, I used str_detect to
-# find their common term, "ACS," in the data sets. The for loop to allows me to
-# join each data set at a time because merge.data.frame only works with joining
-# two data frames to each other. I joined them by their common variable,
-# Geo_GEOID.
+# In order to join all the ACS data sets to each other, I used inner_join. Since
+# I only know how to join two data sets to each other at a time, I did this
+# repeatedly until all the data sets were joined together. Then, for the final
+# joined data set, I got rid of the columns that only had NAs in them.
 
-test <- list.files('raw-data', full.names = T)
-test <- test[str_detect(test, 'ACS')]
+joined1 <- rbind(acs2009, acs2010)
+joined2 <- inner_join(joined1, acs2011, by = "geo_geoid")
+joined3 <- inner_join(joined2, acs2012, by = "geo_geoid")
+joined4 <- inner_join(joined3, acs2013, by = "geo_geoid")
+joined5 <- inner_join(joined4, acs2014, by = "geo_geoid")
+joined6 <- inner_join(joined5, acs2015, by = "geo_geoid")
+joined7 <- inner_join(joined6, acs2016, by = "geo_geoid")
+joined8 <- inner_join(joined7, acs2017, by = "geo_geoid")
+joined_final <- inner_join(joined8, acs2018, by = "geo_geoid")
 
-storage <- read_csv(test[1])
-for(i in 2:length(test)){
-  storage <- merge.data.frame(storage, read_csv(test[i]), by = "Geo_GEOID")
-}
-
-aaa <- read_csv(test[1])
-bbb <- read_csv(test[2])
-
-aaa <- aaa[, colMeans(is.na(aaa)) < 1]
+joined_final <- joined_final[, colMeans(is.na(joined_final)) < 1]
 ```
 
 
@@ -93,7 +104,9 @@ The goal of this project is to discover the extent to which a school’s inequal
 I gathered my data from two sources: the American Community Surveys (ACS) from the US Census Bureau and the National Center for Education Statistics (NCES). From ACS’ data, I extracted information about each school district’s distribution of race and gender, unemployment rate by race and gender, average household income by race, and school dropout rate by sex. From NCES, I was able to find the data on school enrollments by race and sex.
 
 
-Currently, I have gathered most of my data and converted them into csv files. I have not yet finished processing my data because I am still trying to find a way to either organize the NCES data by school districts as opposed to agencies or states or find completely new data that is already grouped by school districts. I am also in the process of combining the ACS files into one comprehensive spreadsheet from 2009-2018 because, right now, each spreadsheet represents a different year.
+Currently, I have just combined the ACS files into one comprehensive spreadsheet from 2009-2018 and selected the variables that I want. My next step is to find a way to combine the results of the NCES spreadsheet with the ACS spreadsheets since NCES is organized by agencies whereas ACS is organized by school districts. If this doesn't work out, I might either enlarge my focus to the state level (as opposed to the school district level) or focus on one state's school districts.
 
 
-Url to my repo: https://github.com/katherinewang122/Final-Project-Milestone-3.git
+
+
+Url to my repo: ___
