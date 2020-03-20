@@ -10,6 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
 library(janitor)
+library(ggplot2)
+library(tidycensus)
+
+library(ggmap)
+library(maps)
+library(mapdata)
+
+library(readxl)
+library(janitor)
 ```
 
 ```{r cleanData, include = FALSE}
@@ -93,6 +102,78 @@ joined_final <- inner_join(joined8, acs2018, by = "geo_geoid")
 
 joined_final <- joined_final[, colMeans(is.na(joined_final)) < 1]
 ```
+
+
+```{r acsGraph}
+
+# for 2009 only
+male <- joined_final %>% 
+  select(geo_geoid, 
+         se_a12003a_001, 
+         se_a12003a_002) %>% 
+  mutate(perc_dropout = (se_a12003a_002/se_a12003a_001)*100) %>% 
+  mutate(type = "male") %>% 
+  mutate(total = se_a12003a_001, drop = se_a12003a_002) %>% 
+  select(geo_geoid, total, drop, perc_dropout, type) %>% 
+  head(10)
+
+female <- joined_final %>% 
+  select(geo_geoid, 
+         se_a12003b_001, 
+         se_a12003b_002) %>% 
+  mutate(perc_dropout = (se_a12003b_002/se_a12003b_001)*100) %>%
+  mutate(type = "female") %>% 
+  mutate(total = se_a12003b_001, drop = se_a12003b_002) %>% 
+  select(geo_geoid, total, drop, perc_dropout, type) %>% 
+  head(10)
+
+drop <- rbind(male, female)
+  
+ggplot(drop, aes(x = geo_geoid, y = perc_dropout)) +
+  geom_col() +
+  labs(title = "Difference in School Dropout Rates Based on Sex", 
+       subtitle = "For Population Ages 16-19",
+       caption = "Source: American Communities Survey",
+       x = "School District ID",
+       y = "Dropout Rate") +
+  facet_wrap(~ type)
+```
+
+
+```{r getData}
+earnings <- read_xlsx("raw-data/EarningRatios.xlsx") %>% 
+  clean_names() %>% 
+  mutate(region = state)
+
+earnings$region <- tolower(earnings$state)
+
+```
+
+
+```{r map}
+states <- map_data("state")
+
+p <- ggplot(data = states, aes(x = long, 
+                   y = lat, group = group)) + 
+  geom_polygon(fill = "lightgray", 
+               color = "white") + 
+  coord_fixed(1.3) +
+  guides(fill = FALSE)
+
+combined <- left_join(states, earnings)
+
+ggplot(combined, aes(x = long, y = lat, group = group, fill = percent)) +
+  geom_polygon(color = "white") +
+  coord_fixed(1.3) +
+  labs(title = "Gender Earnings Ratio for Men and Women with a Bachelor's Degree or Higher", 
+       subtitle = "In 2013",
+       caption = "Source: Status of Women in the States",
+       fill = "Earnings Ratio") +
+  theme_void()
+```
+
+
+
 
 
 **Background**
